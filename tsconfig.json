@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "lib": ["dom", "es2015"],
+    "esModuleInterop": true,
+    "outDir": "dist",
+    "declaration": true,
+    "declarationDir": "dist",
+    "noImplicitAny": false, 
+  },
+  "include": [
+    "src/**/*"  // Ensure that the source files in the 'src' folder are included
+  ],
+  "exclude": [
+    "dist",  // Exclude the dist folder where compiled files are output
+    "node_modules"  // Exclude node_modules as usual
+  ]
+}

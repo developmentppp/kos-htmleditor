@@ -1,0 +1,13 @@
+# Ignore source files
+/src/
+
+# Ignore config files
+/.git/
+
+# Ignore npm debug logs and other development files
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+#Ignore node_modules
+node_modules
