@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "author": "Marwan Esmaail <marwan.esmaail@potthoff.software>",
   "license": "UNLICENSED",
-  "main": "index.ts",
-  "types": "index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "types": "dts-bundle-generator -o index.d.ts index.ts",
-    "deploy": "npm version patch && npm publish"
+    "deploy": "npm version patch && npm publish",
+    "build": "tsc"
   },
   "dependencies": {
     "@ckeditor/ckeditor5-list": "^44.0.0",
