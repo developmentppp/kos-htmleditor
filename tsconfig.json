@@ -1,8 +1,16 @@
 {
   "compilerOptions": {
+    "module":"esnext",
+    "moduleResolution": "node",
+    "target": "es6",
     "jsx": "react",
-    "lib": ["dom", "es2015"],
+    "lib": ["dom", "es2017", "es2018.promise"],
     "esModuleInterop": true,
+    "alwaysStrict": true,
+    "removeComments": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "./",
+    "resolveJsonModule": true,
     "outDir": "dist",
     "declaration": true,
     "declarationDir": "dist",

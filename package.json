@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "author": "Marwan Esmaail <marwan.esmaail@potthoff.software>",
   "license": "UNLICENSED",
-  "main": "dist/index.js",
+  "main": "dist/index.ts",
   "types": "dist/index.d.ts",
   "scripts": {
     "types": "dts-bundle-generator -o index.d.ts index.ts",
@@ -18,7 +18,7 @@
     "react": "^18.3.1",
     "typescript": "^4.9.5"
   },
-  "description": "React components for HTML Editor",
+  "description": "React component for HTML Editor",
   "publishConfig": {
     "@kos-frontend:registry": "https://gitlab.potthoff.local/api/v4/projects/18/packages/npm/"
   }
