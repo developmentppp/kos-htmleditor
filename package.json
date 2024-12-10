@@ -1,6 +1,6 @@
 {
   "name": "@kos-frontend/kos-htmleditor",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": "Marwan Esmaail <marwan.esmaail@potthoff.software>",
   "license": "UNLICENSED",
   "main": "dist/index.ts",
