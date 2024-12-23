@@ -1,56 +1,50 @@
-/*
- * -----------------------------------------------------------------------------------------
- * HTMLEditor.tsx
+/*  * -----------------------------------------------------------------------------------------
+ * index.tsx
  *
- * Copyright: (c) 2004-2021 Potthoff + Partner Unternehmensberatungs-Gesellschaft mbH
+ * Copyright: (c) 2004-2024 Potthoff + Partner Unternehmensberatungs-Gesellschaft mbH
  *            All rights reserved.
  * -----------------------------------------------------------------------------------------
- * Erstellt : 26.11.2021
- * Autor    : Markus Plutka
+ * Erstellt : 12.12.2024
+ * Autor    : Marwan Esmaail
  *
- * Geändert : 04.12.2024
+ * Geändert : 23.12.2024
  *      von : Marwan Esmaail
  * -----------------------------------------------------------------------------------------
  *
  * Changelog:
  *
  */
+
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import React, { useCallback, useMemo, useRef } from "react";
-import CustomClassicEditor from "./ckeditor/ckeditor";
-import { HTMLEditorProps } from "./types/types"
-
-
+import Editor from "./ckeditor/ckeditor";
+import { HTMLEditorProps } from "./types/types";
+import { EventInfo } from "@ckeditor/ckeditor5-utils";
 
 const HTMLEditor = (props: HTMLEditorProps) => {
-  const editorRef = useRef<any>(null);
+  const editorRef = useRef<Editor | null>(null);
 
   const handleChange = useCallback(
-    (e, editor) => {
+    (event: EventInfo<"change:data">, editor: Editor) => {
       const data = editor.getData();
       if (props.onChange) {
-        props.onChange(e, { name: props.name, value: data });
+        props.onChange(event, { name: props.name, value: data });
       }
     },
-    [props.onChange]
+    [props.onChange, props.name]
   );
 
   const resizeEditor = useCallback(
     (rows?: number) => {
-      if (!editorRef.current || props.expandToParent) {
-        return;
-      }
-      let height = "200px";
-      // Take given rowCount or from field
+      if (!editorRef.current || props.expandToParent) return;
+
       const fieldRows = rows || (props.field?.styleProp("h") as number) || 0;
-      if (fieldRows > 0) {
-        height =
-          70 + (fieldRows > 1 ? ((fieldRows as number) - 1) * 110 : 0) + "px";
-      }
-      if (!editorRef.current?.editing) {
-        return;
-      }
-      editorRef.current.editing.view.change((writer) => {
+      const height =
+        fieldRows > 0
+          ? `${70 + (fieldRows > 1 ? (fieldRows - 1) * 110 : 0)}px`
+          : "200px";
+
+      editorRef.current.editing?.view.change((writer) => {
         writer.setStyle(
           "height",
           height,
@@ -58,30 +52,29 @@ const HTMLEditor = (props: HTMLEditorProps) => {
         );
       });
     },
-    [props.field]
+    [props.field, props.expandToParent]
   );
 
-  const handleReady = useCallback((editor) => {
-    editorRef.current = editor;
-    if (props.setEditorRef) {
-      props.setEditorRef(editor);
-    }
-    resizeEditor();
+  const handleReady = useCallback(
+    (editor: any) => {
+      editorRef.current = editor;
+      console.log("editor is loaded", editor);
+      console.log("editor ref", editorRef);
 
-    if (props.focusOnLoad) {
-      editor.editing.view.focus();
-    }
-
-    if (props.setResizeEditor) {
-      props.setResizeEditor(resizeEditor);
-    }
-  }, []);
+      if (props.setEditorRef) props.setEditorRef(editor);
+      resizeEditor();
+      if (props.focusOnLoad) editor.editing.view.focus();
+      if (props.setResizeEditor) props.setResizeEditor(resizeEditor);
+    },
+    [props.setEditorRef, props.focusOnLoad, props.setResizeEditor, resizeEditor]
+  );
 
   const config: any = useMemo(
     () => ({
       toolbar: {
-        shouldNotGroupWhenFull: true,
+        shouldNotGroupWhenFull: true
       },
+      language: "de",
       link: {
         decorators: [
           {
@@ -89,30 +82,27 @@ const HTMLEditor = (props: HTMLEditorProps) => {
             label: "Externer Link",
             attributes: {
               target: "_blank",
-            },
-          },
-        ],
-      },
+              rel: "noopener noreferrer"
+            }
+          }
+        ]
+      }
     }),
     []
   );
 
   return (
-    <>
-      <CKEditor
-        editor={CustomClassicEditor as any}
-        data={props.value}
-        onReady={handleReady}
-        onChange={handleChange}
-        onBlur={props.onBlur}
-        // tabIndex={props.tabIndex}
-        disabled={props.disabled}
-        config={config}
-        id={props.id}
-      />
-    </>
+    <CKEditor
+      editor={Editor}
+      data={props.value}
+      onReady={handleReady}
+      onChange={handleChange}
+      onBlur={props.onBlur}
+      disabled={props.disabled}
+      config={config}
+      id={props.id}
+    />
   );
 };
 
 export default HTMLEditor;
-
