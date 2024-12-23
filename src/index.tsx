@@ -18,8 +18,8 @@
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import React, { useCallback, useMemo, useRef } from "react";
 import Editor from "./ckeditor/ckeditor";
-import { HTMLEditorProps } from "./types/types";
 import { EventInfo } from "@ckeditor/ckeditor5-utils";
+import { HTMLEditorProps } from "./types/types";
 
 const HTMLEditor = (props: HTMLEditorProps) => {
   const editorRef = useRef<Editor | null>(null);
@@ -36,42 +36,86 @@ const HTMLEditor = (props: HTMLEditorProps) => {
 
   const resizeEditor = useCallback(
     (rows?: number) => {
-      if (!editorRef.current || props.expandToParent) return;
-
-      const fieldRows = rows || (props.field?.styleProp("h") as number) || 0;
-      const height =
-        fieldRows > 0
-          ? `${70 + (fieldRows > 1 ? (fieldRows - 1) * 110 : 0)}px`
-          : "200px";
-
-      const root = editorRef.current.editing?.view.document.getRoot();
-
-      if (root) {
-        editorRef.current.editing?.view.change((writer) => {
-          writer.setStyle("height", height, root);
-        });
+      if (!editorRef.current || props.expandToParent) {
+        return;
       }
+      let height = "200px";
+      // Take given rowCount or from field
+      const fieldRows = rows || (props.field?.styleProp("h") as number) || 0;
+      if (fieldRows > 0) {
+        height =
+          70 + (fieldRows > 1 ? ((fieldRows as number) - 1) * 110 : 0) + "px";
+      }
+
+      if (!editorRef.current?.editing) {
+        return;
+      }
+      editorRef.current.editing.view.change((writer) => {
+        const domRoot = editorRef.current.editing.view.domRoots.get("main");
+        if (domRoot) {
+          domRoot.style.height = height;
+        } else {
+          console.warn("domRoot not found for the editor.");
+        }
+      });
     },
-    [props.field, props.expandToParent]
+    [props.field]
   );
 
-  const handleReady = useCallback(
-    (editor: any) => {
-      editorRef.current = editor;
-      console.log("editor is loaded", editor);
-      console.log("editor ref", editorRef);
+  const handleReady = useCallback((editor) => {
+    editorRef.current = editor;
 
-      if (props.setEditorRef) props.setEditorRef(editor);
-      resizeEditor();
-      if (props.focusOnLoad) editor.editing.view.focus();
-      if (props.setResizeEditor) props.setResizeEditor(resizeEditor);
-    },
-    [props.setEditorRef, props.focusOnLoad, props.setResizeEditor, resizeEditor]
-  );
+    if (props.setEditorRef) {
+      props.setEditorRef(editor);
+    }
+    resizeEditor();
+
+    if (props.focusOnLoad) {
+      editor.editing.view.focus();
+    }
+
+    if (props.setResizeEditor) {
+      props.setResizeEditor(resizeEditor);
+    }
+    const toolbarElement = editorRef.current?.ui.view.toolbar.element;
+    const parentElement = toolbarElement.closest(".ck-editor__top");
+    console.log("Bold Command State:", editor.commands.get("bold")?.isEnabled);
+    console.log(
+      "Italic Command State:",
+      editor.commands.get("italic")?.isEnabled
+    );
+    console.log(
+      "Underline Command State:",
+      editor.commands.get("underline")?.isEnabled
+    );
+  }, []);
 
   const config: any = useMemo(
     () => ({
       toolbar: {
+        items: [
+          "undo",
+          "redo",
+          "|",
+          "findAndReplace",
+          "|",
+          "heading",
+          "|",
+          "bold",
+          "italic",
+          "underline",
+          "strikethrough",
+          "fontSize",
+          "|",
+          "alignment",
+          "|",
+          "fontColor",
+          "fontBackgroundColor",
+          "|",
+          "numberedList",
+          "bulletedList",
+          "listStyle"
+        ],
         shouldNotGroupWhenFull: true
       },
       language: "de",
