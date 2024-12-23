@@ -44,13 +44,13 @@ const HTMLEditor = (props: HTMLEditorProps) => {
           ? `${70 + (fieldRows > 1 ? (fieldRows - 1) * 110 : 0)}px`
           : "200px";
 
-      editorRef.current.editing?.view.change((writer) => {
-        writer.setStyle(
-          "height",
-          height,
-          editorRef.current.editing.view.document.getRoot()
-        );
-      });
+      const root = editorRef.current.editing?.view.document.getRoot();
+
+      if (root) {
+        editorRef.current.editing?.view.change((writer) => {
+          writer.setStyle("height", height, root);
+        });
+      }
     },
     [props.field, props.expandToParent]
   );
