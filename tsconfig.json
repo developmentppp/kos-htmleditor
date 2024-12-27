@@ -10,16 +10,12 @@
     "removeComments": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": "./",
-    "paths": {
-      "kos-types": ["../../kos-types"]
-    },
     "resolveJsonModule": true,
     "outDir": "dist",
     "declaration": true,
     "declarationDir": "dist",
     "noImplicitAny": false,
-    "typeRoots": ["node_modules/@types"], // Ensure this is included
-
+    "typeRoots": ["node_modules/@types"] // Ensure this is included
   },
   "include": [
     "src/**/*" // Ensure that the source files in the 'src' folder are included
