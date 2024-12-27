@@ -1,12 +1,11 @@
-/*
- * -----------------------------------------------------------------------------------------
- * HTMLEditor.tsx
+/*  * -----------------------------------------------------------------------------------------
+ * index.tsx
  *
- * Copyright: (c) 2004-2021 Potthoff + Partner Unternehmensberatungs-Gesellschaft mbH
+ * Copyright: (c) 2004-2024 Potthoff + Partner Unternehmensberatungs-Gesellschaft mbH
  *            All rights reserved.
  * -----------------------------------------------------------------------------------------
- * Erstellt : 26.11.2021
- * Autor    : Markus Plutka
+ * Erstellt : 12.12.2024
+ * Autor    : Marwan Esmaail
  *
  * Geändert : 27.12.2024
  *      von : Marwan Esmaail
@@ -106,6 +105,8 @@ const HTMLEditor = (props: HTMLEditorProps) => {
     }),
     []
   );
+
+  console.log(config.toolbar.items);
 
   return (
     <CKEditor

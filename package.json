@@ -38,6 +38,7 @@
     "@ckeditor/ckeditor5-typing": "^44.1.0",
     "@ckeditor/ckeditor5-undo": "^44.1.0",
     "@ckeditor/ckeditor5-word-count": "^44.1.0",
+    "@types/ckeditor__ckeditor5-build-classic": "^37.0.4",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "react": "^18.3.1",
@@ -48,7 +49,6 @@
     "@kos-frontend:registry": "https://gitlab.potthoff.local/api/v4/projects/18/packages/npm/"
   },
   "devDependencies": {
-    "@ckeditor/ckeditor5-utils": "44.1.0",
-    "@types/ckeditor__ckeditor5-build-classic": "^37.0.4"
+    "@ckeditor/ckeditor5-utils": "44.1.0"
   }
 }

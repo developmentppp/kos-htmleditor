@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module":"esnext",
+    "module": "esnext",
     "moduleResolution": "node",
     "target": "es6",
     "jsx": "react",
@@ -14,13 +14,13 @@
     "outDir": "dist",
     "declaration": true,
     "declarationDir": "dist",
-    "noImplicitAny": false, 
+    "noImplicitAny": false
   },
   "include": [
-    "src/**/*"  // Ensure that the source files in the 'src' folder are included
+    "src/**/*" // Ensure that the source files in the 'src' folder are included
   ],
   "exclude": [
-    "dist",  // Exclude the dist folder where compiled files are output
-    "node_modules"  // Exclude node_modules as usual
+    "dist", // Exclude the dist folder where compiled files are output
+    "node_modules" // Exclude node_modules as usual
   ]
 }
