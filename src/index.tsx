@@ -8,61 +8,69 @@
  * Erstellt : 26.11.2021
  * Autor    : Markus Plutka
  *
- * Geändert : 04.12.2024
+ * Geändert : 27.12.2024
  *      von : Marwan Esmaail
  * -----------------------------------------------------------------------------------------
  *
  * Changelog:
  *
  */
+
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import React, { useCallback, useMemo, useRef } from "react";
-import CustomClassicEditor from "./ckeditor/ckeditor";
-import { HTMLEditorProps } from "./types/types"
-
-
+import Editor from "./ckeditor/ckeditor";
+import { EventInfo } from "@ckeditor/ckeditor5-utils";
+import { HTMLEditorProps } from "./types/types";
 
 const HTMLEditor = (props: HTMLEditorProps) => {
-  const editorRef = useRef<any>(null);
+  const editorRef = useRef<Editor | null>(null);
 
   const handleChange = useCallback(
-    (e, editor) => {
+    (event: EventInfo<"change:data">, editor: Editor) => {
       const data = editor.getData();
       if (props.onChange) {
-        props.onChange(e, { name: props.name, value: data });
+        props.onChange(event, { name: props.name, value: data });
       }
     },
-    [props.onChange]
+    [props.onChange, props.name]
   );
 
   const resizeEditor = useCallback(
     (rows?: number) => {
+      // Ensure editorRef.current is defined and props.expandToParent is false
       if (!editorRef.current || props.expandToParent) {
         return;
       }
+
+      // Calculate height
       let height = "200px";
-      // Take given rowCount or from field
       const fieldRows = rows || (props.field?.styleProp("h") as number) || 0;
       if (fieldRows > 0) {
-        height =
-          70 + (fieldRows > 1 ? ((fieldRows as number) - 1) * 110 : 0) + "px";
+        height = `${70 + (fieldRows - 1) * 110}px`;
       }
-      if (!editorRef.current?.editing) {
-        return;
+
+      // Safely use editorRef.current with a non-null assertion
+      const editorInstance = editorRef.current!;
+
+      // Safeguard access to editing.view
+      if (editorInstance.editing?.view) {
+        editorInstance.editing.view.change((writer) => {
+          const domRoot = editorInstance.editing.view.domRoots.get("main");
+
+          if (domRoot) {
+            domRoot.style.height = height;
+          } else {
+            console.warn("domRoot not found for the editor.");
+          }
+        });
       }
-      editorRef.current.editing.view.change((writer) => {
-        writer.setStyle(
-          "height",
-          height,
-          editorRef.current.editing.view.document.getRoot()
-        );
-      });
     },
-    [props.field]
+    [props.field, props.expandToParent]
   );
 
   const handleReady = useCallback((editor) => {
     editorRef.current = editor;
+
     if (props.setEditorRef) {
       props.setEditorRef(editor);
     }
@@ -80,8 +88,9 @@ const HTMLEditor = (props: HTMLEditorProps) => {
   const config: any = useMemo(
     () => ({
       toolbar: {
-        shouldNotGroupWhenFull: true,
+        shouldNotGroupWhenFull: true
       },
+      language: "de",
       link: {
         decorators: [
           {
@@ -89,30 +98,27 @@ const HTMLEditor = (props: HTMLEditorProps) => {
             label: "Externer Link",
             attributes: {
               target: "_blank",
-            },
-          },
-        ],
-      },
+              rel: "noopener noreferrer"
+            }
+          }
+        ]
+      }
     }),
     []
   );
 
   return (
-    <>
-      <CKEditor
-        editor={CustomClassicEditor as any}
-        data={props.value}
-        onReady={handleReady}
-        onChange={handleChange}
-        onBlur={props.onBlur}
-        // tabIndex={props.tabIndex}
-        disabled={props.disabled}
-        config={config}
-        id={props.id}
-      />
-    </>
+    <CKEditor
+      editor={Editor}
+      data={props.value}
+      onReady={handleReady}
+      onChange={handleChange}
+      onBlur={props.onBlur}
+      disabled={props.disabled}
+      config={config}
+      id={props.id}
+    />
   );
 };
 
 export default HTMLEditor;
-
