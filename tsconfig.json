@@ -14,7 +14,9 @@
     "outDir": "dist",
     "declaration": true,
     "declarationDir": "dist",
-    "noImplicitAny": false
+    "noImplicitAny": false,
+    "typeRoots": ["node_modules/@types"], // Ensure this is included
+
   },
   "include": [
     "src/**/*" // Ensure that the source files in the 'src' folder are included

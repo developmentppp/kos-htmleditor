@@ -14,6 +14,7 @@
     "@ckeditor/ckeditor5-alignment": "^44.1.0",
     "@ckeditor/ckeditor5-basic-styles": "^44.1.0",
     "@ckeditor/ckeditor5-block-quote": "^44.1.0",
+    "@ckeditor/ckeditor5-build-classic": "^44.1.0",
     "@ckeditor/ckeditor5-code-block": "^44.1.0",
     "@ckeditor/ckeditor5-core": "^44.1.0",
     "@ckeditor/ckeditor5-editor-classic": "^44.1.0",
@@ -38,14 +39,13 @@
     "@ckeditor/ckeditor5-typing": "^44.1.0",
     "@ckeditor/ckeditor5-undo": "^44.1.0",
     "@ckeditor/ckeditor5-word-count": "^44.1.0",
-    "@types/ckeditor__ckeditor5-build-classic": "^37.0.4",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "react": "^18.3.1",
     "typescript": "^4.9.5"
   },
   "peerDependencies": {
-    "kos-types": "^1.0.0" 
+    "kos-types": "^1.0.0"
   },
   "description": "React component for HTML Editor",
   "publishConfig": {
