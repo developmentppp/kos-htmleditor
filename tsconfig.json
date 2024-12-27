@@ -10,6 +10,9 @@
     "removeComments": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": "./",
+    "paths": {
+      "kos-types": ["../../kos-types"]
+    },
     "resolveJsonModule": true,
     "outDir": "dist",
     "declaration": true,
