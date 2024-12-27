@@ -7,7 +7,7 @@
  * Erstellt : 12.12.2024
  * Autor    : Marwan Esmaail
  *
- * Geändert : 23.12.2024
+ * Geändert : 27.12.2024
  *      von : Marwan Esmaail
  * -----------------------------------------------------------------------------------------
  *
@@ -36,30 +36,35 @@ const HTMLEditor = (props: HTMLEditorProps) => {
 
   const resizeEditor = useCallback(
     (rows?: number) => {
+      // Ensure editorRef.current is defined and props.expandToParent is false
       if (!editorRef.current || props.expandToParent) {
         return;
       }
+
+      // Calculate height
       let height = "200px";
-      // Take given rowCount or from field
       const fieldRows = rows || (props.field?.styleProp("h") as number) || 0;
       if (fieldRows > 0) {
-        height =
-          70 + (fieldRows > 1 ? ((fieldRows as number) - 1) * 110 : 0) + "px";
+        height = `${70 + (fieldRows - 1) * 110}px`;
       }
 
-      if (!editorRef.current?.editing) {
-        return;
+      // Safely use editorRef.current with a non-null assertion
+      const editorInstance = editorRef.current!;
+
+      // Safeguard access to editing.view
+      if (editorInstance.editing?.view) {
+        editorInstance.editing.view.change((writer) => {
+          const domRoot = editorInstance.editing.view.domRoots.get("main");
+
+          if (domRoot) {
+            domRoot.style.height = height;
+          } else {
+            console.warn("domRoot not found for the editor.");
+          }
+        });
       }
-      editorRef.current.editing.view.change((writer) => {
-        const domRoot = editorRef.current.editing.view.domRoots.get("main");
-        if (domRoot) {
-          domRoot.style.height = height;
-        } else {
-          console.warn("domRoot not found for the editor.");
-        }
-      });
     },
-    [props.field]
+    [props.field, props.expandToParent]
   );
 
   const handleReady = useCallback((editor) => {
@@ -77,17 +82,6 @@ const HTMLEditor = (props: HTMLEditorProps) => {
     if (props.setResizeEditor) {
       props.setResizeEditor(resizeEditor);
     }
-    const toolbarElement = editorRef.current?.ui.view.toolbar.element;
-    const parentElement = toolbarElement.closest(".ck-editor__top");
-    console.log("Bold Command State:", editor.commands.get("bold")?.isEnabled);
-    console.log(
-      "Italic Command State:",
-      editor.commands.get("italic")?.isEnabled
-    );
-    console.log(
-      "Underline Command State:",
-      editor.commands.get("underline")?.isEnabled
-    );
   }, []);
 
   const config: any = useMemo(
@@ -134,6 +128,8 @@ const HTMLEditor = (props: HTMLEditorProps) => {
     }),
     []
   );
+
+  console.log(config.toolbar.items);
 
   return (
     <CKEditor
